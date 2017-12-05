@@ -11,7 +11,7 @@ RUN echo https://philopon.github.io/alpine-repo >> /etc/apk/repositories  && \
     echo "hNX0prKVdZO1DdXsNggevixrMPhMln37ZT6pp0NndXt20l3sqp7Rt0M1oSZ2V8Xr" >> /etc/apk/keys/philopon-alpine-repo.rsa.pub && \
     echo "HwIDAQAB"                                                         >> /etc/apk/keys/philopon-alpine-repo.rsa.pub && \
     echo "-----END PUBLIC KEY-----"                                         >> /etc/apk/keys/philopon-alpine-repo.rsa.pub && \
-    apk add --no-cache --update py3-rdkit && \
+    apk add --no-cache --update 'py3-rdkit=2017.09.1-r0' && \
     rm -r /var/cache/apk
 
 CMD python3
