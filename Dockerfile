@@ -21,10 +21,11 @@ RUN pip wheel numpy pillow pandas -w /wheel && pip install /wheel/*.whl
 
 WORKDIR /boost_${BOOST_VERSION}
 RUN ./bootstrap.sh --with-libraries=python,serialization,system,iostreams
-RUN ./b2 install -j$(nproc) --prefix=/opt/boost -d0
+RUN export CPLUS_INCLUDE_PATH="/usr/local/include/python${PY_VERSION}$(python -c 'import sys; print(sys.abiflags)')/";\
+    ./b2 install -j$(nproc) --prefix=/opt/boost -d0
 
 WORKDIR ${RDBASE}/build
-RUN cmake .. -DRDK_INSTALL_INTREE=OFF -DBOOST_ROOT=/opt/boost -DBoost_NO_SYSTEM_PATHS=ON -DCMAKE_INSTALL_PREFIX=/opt/rdkit
+RUN cmake .. -DRDK_INSTALL_INTREE=OFF -DBOOST_ROOT=/opt/boost -DBoost_NO_SYSTEM_PATHS=ON -DCMAKE_INSTALL_PREFIX=/opt/rdkit -DRDK_INSTALL_STATIC_LIBS=OFF
 RUN make -j$(nproc)
 RUN make install
 ENV LD_LIBRARY_PATH=/opt/boost/lib:/opt/rdkit/lib PYTHONPATH=/opt/rdkit/lib/python${PY_VERSION}/site-packages/
@@ -38,7 +39,7 @@ RUN if [[ "${TINY}" = true ]]; then\
     pip install /wheel/*.whl --prefix=/opt/pythonlib --force-reinstall;\
     fi
 RUN find /opt | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf
-RUN rm -rf /opt/rdkit/include /opt/rdkit/lib/*_static.a /opt/boost/lib/*.a
+RUN rm -rf /opt/rdkit/include /opt/boost/lib/*.a
 
 FROM python:${PY_VERSION}-alpine
 ARG PY_VERSION
