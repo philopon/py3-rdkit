@@ -34,16 +34,6 @@ jobs:
                   tag_names: true
                   tag_suffix: "-py${{ matrix.python_version }}"
 
-            - name: Publish cuda to Registry
-              uses: philopon/Publish-Docker-Github-Action@master
-              with:
-                  name: ${{ secrets.DOCKER_USERNAME }}/py3-rdkit
-                  username: ${{ secrets.DOCKER_USERNAME }}
-                  password: ${{ secrets.DOCKER_PASSWORD }}
-                  buildargs: PY_VERSION=${{ matrix.python_version }} BASE_IMAGE=nvidia/cuda:10.1-cudnn7-runtime
-                  tag_names: true
-                  tag_suffix: "-py${{ matrix.python_version }}-cuda"
-
             - name: Publish latest to Registry
               if: matrix.latest_python
               uses: philopon/Publish-Docker-Github-Action@master
@@ -64,14 +54,3 @@ jobs:
                   buildargs: TINY=true,PY_VERSION=${{ matrix.python_version }}
                   tag_names: true
                   tag_suffix: "-slim"
-
-            - name: Publish latest-cuda to Registry
-              if: matrix.latest_python
-              uses: philopon/Publish-Docker-Github-Action@master
-              with:
-                  name: ${{ secrets.DOCKER_USERNAME }}/py3-rdkit
-                  username: ${{ secrets.DOCKER_USERNAME }}
-                  password: ${{ secrets.DOCKER_PASSWORD }}
-                  buildargs: PY_VERSION=${{ matrix.python_version }} BASE_IMAGE=nvidia/cuda:10.1-cudnn7-runtime
-                  tag_names: true
-                  tag_suffix: "-cuda"
