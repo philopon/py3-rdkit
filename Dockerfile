@@ -67,7 +67,7 @@ RUN make install
 ENV LD_LIBRARY_PATH=/opt/boost/lib:/opt/rdkit/lib:${LD_LIBRARY_PATH}\
     PYTHONPATH=/opt/rdkit/lib/python${PY_VERSION}/site-packages
 RUN if [[ "${PY_VERSION}" = 3.8 ]]; then\
-    CTEST_OUTPUT_ON_FAILURE=1 ctest -R pythonTestDirChem;\
+    CTEST_OUTPUT_ON_FAILURE=1 ctest -E pythonTestDirChem;\
     else\
     CTEST_OUTPUT_ON_FAILURE=1 ctest;\
     fi
