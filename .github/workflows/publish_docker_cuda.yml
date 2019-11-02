@@ -1,0 +1,36 @@
+name: Publish Docker cuda
+on: [push]
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                python_version: ["3.8", "3.7", "3.6"]
+                include:
+                    - python_version: "3.8"
+                      latest_python: true
+
+        steps:
+            - uses: actions/checkout@master
+
+            - name: Publish cuda to Registry
+              uses: philopon/Publish-Docker-Github-Action@master
+              with:
+                  name: ${{ secrets.DOCKER_USERNAME }}/py3-rdkit
+                  username: ${{ secrets.DOCKER_USERNAME }}
+                  password: ${{ secrets.DOCKER_PASSWORD }}
+                  buildargs: PY_VERSION=${{ matrix.python_version }} BASE_IMAGE=nvidia/cuda:10.1-cudnn7-runtime
+                  tag_names: true
+                  tag_suffix: "-py${{ matrix.python_version }}-cuda"
+
+            - name: Publish latest-cuda to Registry
+              if: matrix.latest_python
+              uses: philopon/Publish-Docker-Github-Action@master
+              with:
+                  name: ${{ secrets.DOCKER_USERNAME }}/py3-rdkit
+                  username: ${{ secrets.DOCKER_USERNAME }}
+                  password: ${{ secrets.DOCKER_PASSWORD }}
+                  buildargs: PY_VERSION=${{ matrix.python_version }} BASE_IMAGE=nvidia/cuda:10.1-cudnn7-runtime
+                  tag_names: true
+                  tag_suffix: "-cuda"

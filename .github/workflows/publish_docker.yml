@@ -6,7 +6,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                python_version: ["3.8", "3.7", "3.6", "3.5"]
+                python_version: ["3.8", "3.7", "3.6"]
                 include:
                     - python_version: "3.8"
                       latest_python: true
